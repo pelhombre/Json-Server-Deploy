@@ -1,10 +1,21 @@
-const jsonServer = require("json-server"); // importing json-server library
+const jsonServer = require("json-server");
 const server = jsonServer.create();
-const router = jsonServer.router("db.json");
 const middlewares = jsonServer.defaults();
-const port = process.env.PORT || 8080; //  chose port from here like 8080, 3001
+const port = process.env.PORT || 8080;
 
 server.use(middlewares);
+
+const endpoint = getEndpoint();
+const router = jsonServer.router(endpoint);
+
 server.use(router);
 
 server.listen(port);
+
+function getEndpoint() {
+  if (process.env.NODE_ENV === 'production') {
+    return process.env.VITE_ENDPOINT_PRODUCCION;
+  } else {
+    return process.env.VITE_ENDPOINT_DESARROLLO;
+  }
+}
